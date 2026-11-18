@@ -3,7 +3,7 @@ spring:
     name: spring-kafka
   cloud:
     function:
-      definition: pageEventConsumer;pageEventSupplier
+      definition: pageEventConsumer;pageEventSupplier;kStream
     stream:
       bindings:
         pageEventConsumer-in-0:
@@ -13,3 +13,12 @@ spring:
           producer:
             poller:
               fixed-delay: 200
+        kStream-in-0:
+          destination: T6
+        kStream-out-0:
+          destination: T7
+      kafka:
+        streams:
+          binder:
+            configuration:
+              commit.interval.ms: 1000
