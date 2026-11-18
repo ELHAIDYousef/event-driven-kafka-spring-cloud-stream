@@ -1,3 +1,10 @@
 spring:
   application:
     name: spring-kafka
+  cloud:
+    function:
+      definition: pageEventConsumer
+    stream:
+      bindings:
+        pageEventConsumer-in-0:
+          destination: T1
