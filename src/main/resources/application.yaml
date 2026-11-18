@@ -3,8 +3,13 @@ spring:
     name: spring-kafka
   cloud:
     function:
-      definition: pageEventConsumer
+      definition: pageEventConsumer;pageEventSupplier
     stream:
       bindings:
         pageEventConsumer-in-0:
           destination: T1
+        pageEventSupplier-out-0:
+          destination: T6
+          producer:
+            poller:
+              fixed-delay: 200
