@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothie/1.34.0/smoothie.min.js"></script>
+</head>
+<body>
+<h3>Visites par page (fenêtre de 5 s) : <span style="color:green">P1</span> / <span style="color:red">P2</span></h3>
+<canvas id="chart" width="600" height="400"></canvas>
+<script>
+    const pages = ["P1", "P2"];
+    const colors = [
+        { stroke: 'rgba(0, 255, 0, 1)', fill: 'rgba(0, 255, 0, 0.2)' },
+        { stroke: 'rgba(255, 0, 0, 1)', fill: 'rgba(255, 0, 0, 0.2)' }
+    ];
+    const series = {};
+    const smoothieChart = new SmoothieChart({ tooltip: true });
+    smoothieChart.streamTo(document.getElementById("chart"), 500);
+    pages.forEach((page, i) => {
+        series[page] = new TimeSeries();
+        smoothieChart.addTimeSeries(series[page], {
+            strokeStyle: colors[i].stroke,
+            fillStyle: colors[i].fill,
+            lineWidth: 2
+        });
+    });
+    const eventSource = new EventSource("/analytics");
+    eventSource.addEventListener("message", event => {
+        const data = JSON.parse(event.data);
+        pages.forEach(page => series[page].append(new Date().getTime(), data[page] ?? 0));
+    });
+</script>
+</body>
+</html>
